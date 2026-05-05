@@ -34,4 +34,4 @@ Module `shared` là thư viện nền tảng chứa các thành phần cốt lõ
 *Lưu ý: Module này phải được build và cài đặt (`mvn install`) trước khi build các service phụ thuộc.*
 
 ---
-[Quay lại README tổng](file:///e:/Personal/project/backend/README.md)
+[Quay lại README tổng](../README.md)

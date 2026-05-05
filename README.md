@@ -2,26 +2,22 @@
 
 Hệ thống quản lý bất động sản cho thuê thông minh (Smart Real Estate Management System). Backend được xây dựng theo kiến trúc Microservices, sử dụng Java 25 và Spring Boot 4.
 
-## Dependencies
-
-Dự án được tổ chức theo mô hình Monorepo. Module `shared` đóng vai trò là nền tảng cốt lõi cho tất cả các dịch vụ khác.
-
 ### Chi tiết cấu trúc các thành phần:
 
-- 📦 **[shared/](file:///e:/Personal/project/backend/shared)**: Module nền tảng của toàn bộ hệ thống.
+- 📦 **[shared/](./shared)**: Module nền tảng của toàn bộ hệ thống.
   - Chứa các lớp **Base** (Controller, Service, Entity), **Config**, **DTOs** và **Exception handling**.
-  - **Lưu ý**: Đây là module dùng chung, mọi service khác đều phụ thuộc vào nó. Bạn **phải build module này đầu tiên** để các service khác có thể hoạt động. Xem chi tiết tại [Shared README](file:///e:/Personal/project/backend/shared/README.md).
+  - **Lưu ý**: Đây là module dùng chung, mọi service khác đều phụ thuộc vào nó. Bạn **phải build module này đầu tiên** để các service khác có thể hoạt động. Xem chi tiết tại [Shared README](./shared/README.md).
 
-- 👤 **[user-service/](file:///e:/Personal/project/backend/user-service)**: Microservice quản lý người dùng.
+- 👤 **[user-service/](./user-service)**: Microservice quản lý người dùng.
   - Phụ trách lưu trữ thông tin cá nhân, hồ sơ và phân quyền.
-  - Sử dụng module `shared` để chuẩn hóa các phản hồi API. Xem chi tiết tại [User Service README](file:///e:/Personal/project/backend/user-service/README.md).
+  - Sử dụng module `shared` để chuẩn hóa các phản hồi API. Xem chi tiết tại [User Service README](./user-service/README.md).
 
-- 🐳 **[deployment/](file:///e:/Personal/project/backend/deployment)**: Quản lý môi trường triển khai.
+- 🐳 **[deployment/](./deployment)**: Quản lý môi trường triển khai.
   - Chứa các kịch bản **Docker Compose** để khởi tạo cơ sở dữ liệu (PostgreSQL) và các thành phần hạ tầng khác như Kafka.
 
-- 📄 **[document/](file:///e:/Personal/project/backend/document)**: Hệ thống tài liệu dự án.
-  - [Cấu trúc chi tiết (Structure)](file:///e:/Personal/project/backend/document/structure.md): Mô tả đầy đủ từng file và thư mục.
-  - [Thiết kế mức cao (High-level Design)](file:///e:/Personal/project/backend/document/high-level-design.md): Tài liệu phân tích nghiệp vụ.
+- 📄 **[document/](./document)**: Hệ thống tài liệu dự án.
+  - [Cấu trúc chi tiết (Structure)](./document/structure.md): Mô tả đầy đủ từng file và thư mục.
+  - [Thiết kế mức cao (High-level Design)](./document/high-level-design.md): Tài liệu phân tích nghiệp vụ.
 
 ---
 

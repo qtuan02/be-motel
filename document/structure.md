@@ -76,4 +76,4 @@ Thay vì phải nhớ hàng chục lệnh Maven phức tạp, bạn chỉ cần 
 Sử dụng `dependencyManagement` để đảm bảo tất cả các microservices đều sử dụng cùng một phiên bản của các thư viện (như Spring Boot 4, MapStruct, Lombok), tránh xung đột phiên bản khi triển khai.
 
 ---
-[Quay lại README tổng](file:///e:/Personal/project/backend/README.md)
+[Quay lại README tổng](../README.md)

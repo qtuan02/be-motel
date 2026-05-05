@@ -38,4 +38,4 @@ Các endpoints mặc định:
 - **Flyway/Liquibase**: (Nếu có) Quản lý migration schema.
 
 ---
-[Quay lại README tổng](file:///e:/Personal/project/backend/README.md)
+[Quay lại README tổng](../README.md)
