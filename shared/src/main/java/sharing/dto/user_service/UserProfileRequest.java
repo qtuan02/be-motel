@@ -1,4 +1,4 @@
-package com.motel.user_service.dto.user_profile;
+package sharing.dto.user_service;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

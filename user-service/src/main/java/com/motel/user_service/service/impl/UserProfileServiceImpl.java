@@ -1,7 +1,5 @@
 package com.motel.user_service.service.impl;
 
-import com.motel.user_service.dto.user_profile.UserProfileRequest;
-import com.motel.user_service.dto.user_profile.UserProfileResponse;
 import com.motel.user_service.entity.UserProfile;
 import com.motel.user_service.mapper.UserProfileMapper;
 import com.motel.user_service.repository.UserProfileRepository;
@@ -9,6 +7,8 @@ import com.motel.user_service.service.UserProfileService;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import sharing.base.service.impl.BaseServiceImpl;
+import sharing.dto.user_service.UserProfileRequest;
+import sharing.dto.user_service.UserProfileResponse;
 
 @Service
 public class UserProfileServiceImpl
