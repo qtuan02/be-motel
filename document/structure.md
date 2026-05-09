@@ -1,79 +1,301 @@
-# Cấu trúc chi tiết dự án (Detailed Project Structure)
+# Cấu Trúc Dự Án
 
-Tài liệu này mô tả chi tiết và đầy đủ nhất về cấu trúc thư mục, các package và vai trò của từng file trong hệ thống Backend.
+Tài liệu này mô tả cấu trúc thư mục, module và vai trò của các file quan trọng trong backend.
 
-## 📂 Sơ đồ cấu trúc toàn diện (Comprehensive Directory Tree)
+## Tổng quan thư mục
 
 ```text
 backend/
-├── .mvn/                        # Maven Wrapper - Đảm bảo phiên bản Maven thống nhất
-├── deployment/                  # Quản lý triển khai và hạ tầng Docker
-│   └── docker-compose/          # Các kịch bản chạy hạ tầng
-│       └── infra.yml            # Khởi tạo Postgres 18 & Kafka 4.2
-├── document/                    # Lưu trữ tài liệu thiết kế và quy trình
-│   ├── structure.md             # [Tài liệu hiện tại]
-│   └── high-level-design.md     # Tài liệu thiết kế hệ thống mức cao
-├── shared/                      # Module Foundation (Thư viện dùng chung)
-│   ├── src/main/java/sharing/
-│   │   ├── base/                # KIẾN TRÚC CỐT LÕI (Abstract Classes)
-│   │   │   ├── controller/      # BaseController: Xử lý CRUD mặc định
-│   │   │   ├── entity/          # BaseEntity: Audit fields (CreatedBy, UpdatedAt,...)
-│   │   │   ├── exception/       # Các lỗi logic cơ bản
-│   │   │   ├── mapper/          # Cấu hình mapping chung
-│   │   │   ├── repository/      # Interface Repository dùng chung
-│   │   │   └── service/         # Interface & Implementation Service cơ sở
-│   │   ├── config/              # CẤU HÌNH HỆ THỐNG
-│   │   │   ├── JacksonConfig    # Định dạng JSON trả về (Date, Null handling)
-│   │   │   └── SecurityConfig   # (Planned) Cấu hình bảo mật tập trung
-│   │   ├── constant/            # Định nghĩa các Enum, Status, API Paths
-│   │   ├── dto/                 # DATA TRANSFER OBJECTS (Dùng cho toàn hệ thống)
-│   │   │   ├── ApiResponse      # Chuẩn hóa dữ liệu JSON trả về Client
-│   │   │   ├── PagedResponse    # Chuẩn hóa dữ liệu khi có phân trang
-│   │   │   └── user-service/    # Các DTO dùng chung cho User Service
-│   │   ├── exception/           # XỬ LÝ LỖI TẬP TRUNG
-│   │   │   ├── AppException     # Custom Exception chính của hệ thống
-│   │   │   └── GlobalHandler    # Bắt mọi ngoại lệ và trả về lỗi rõ ràng
-│   │   └── utils/               # Công cụ bổ trợ (String, Date, Reflection)
-│   └── pom.xml                  # Quản lý dependencies của module shared
-├── user-service/                # Microservice: Quản lý người dùng & hồ sơ
-│   ├── src/main/java/com/motel/user_service/
-│   │   ├── controller/          # Tiếp nhận các yêu cầu HTTP liên quan User
-│   │   ├── dto/                 # Các yêu cầu/phản hồi đặc thù của User
-│   │   │   └── user_profile/    # DTO riêng cho UserProfile
-│   │   ├── entity/              # Định nghĩa bảng UserProfile trong DB
-│   │   ├── mapper/              # Chuyển đổi UserProfile <-> DTO
-│   │   ├── repository/          # Truy vấn dữ liệu từ bảng UserProfile
-│   │   └── service/             # Xử lý logic nghiệp vụ cho User
-│   │       └── impl/            # Implementation chi tiết của Service
-│   └── pom.xml                  # Dependencies: Spring Web, JPA, Postgres, Shared
-├── pom.xml                      # ROOT POM: Quản lý tập trung version cho toàn bộ project
-├── Taskfile.yml                 # Hệ thống Automation: Build, Run, Format code
-└── README.md                    # Cổng vào của dự án (Hướng dẫn nhanh)
+├── .mvn/
+├── deployment/
+│   └── docker-compose/
+│       └── infra.yml
+├── document/
+│   ├── structure.md
+│   ├── high-level-design.md
+│   └── backend-design.docx
+├── rules/
+├── shared/
+│   ├── pom.xml
+│   └── src/main/java/sharing/
+├── user-service/
+│   ├── pom.xml
+│   └── src/
+├── pom.xml
+├── README.md
+└── Taskfile.yml
 ```
 
-## 📝 Phân tích chi tiết các thành phần quan trọng
+## Root project
 
-### 1. Kiến trúc Base (trong module `shared`)
-Đây là phần quan trọng nhất giúp hệ thống đồng nhất và dễ mở rộng:
-- **`BaseController`**: Cung cấp sẵn 6 API chuẩn (Create, GetById, GetList, Search, Update, Delete). Khi tạo một controller mới (như `UserProfileController`), bạn chỉ cần kế thừa và sẽ có ngay các API này mà không cần viết code.
-- **`BaseEntity`**: Tự động quản lý các trường như `id` (UUID), `createdAt`, `updatedAt` cho mọi bảng trong cơ sở dữ liệu.
+### `pom.xml`
 
-### 2. Luồng xử lý dữ liệu chuẩn
-Khi một yêu cầu đến `user-service`:
-1. **Controller**: Tiếp nhận và validate dữ liệu từ `UserProfileRequest`.
-2. **Service**: Xử lý logic (kiểm tra quyền, dữ liệu hợp lệ,...).
-3. **Mapper**: Chuyển DTO sang Entity để lưu vào DB.
-4. **Repository**: Thực hiện thao tác với database Postgres thông qua Hibernate.
-5. **Response**: Dữ liệu được Mapper chuyển ngược lại thành `UserProfileResponse` và bọc trong `ApiResponse` trước khi gửi về Client.
+Root POM khai báo project cha dạng Maven multi-module.
 
-### 3. Hệ thống Automation (`Taskfile.yml`)
-Thay vì phải nhớ hàng chục lệnh Maven phức tạp, bạn chỉ cần sử dụng các lệnh rút gọn:
-- `task build_shared`: Tự động dọn dẹp và cài đặt module shared.
-- `task run_user`: Tự động khởi chạy service người dùng.
-- `task format`: Đảm bảo code của mọi thành viên trong team đều sạch và đúng quy chuẩn chung.
+Module hiện có:
 
-### 4. Quản lý Dependencies (Root `pom.xml`)
-Sử dụng `dependencyManagement` để đảm bảo tất cả các microservices đều sử dụng cùng một phiên bản của các thư viện (như Spring Boot 4, MapStruct, Lombok), tránh xung đột phiên bản khi triển khai.
+- `shared`
+- `user-service`
 
----
-[Quay lại README tổng](../README.md)
+Các version chính được quản lý ở root:
+
+- Java `25`
+- Spring Boot `4.0.6`
+- Lombok `1.18.46`
+- MapStruct `1.6.3`
+- PostgreSQL JDBC `42.7.11`
+- Flyway `12.6.0`
+- Spotless `3.4.0`
+
+Root POM cũng cấu hình Spotless với Palantir Java Format để kiểm tra format code khi build.
+
+### `Taskfile.yml`
+
+Chứa các lệnh tiện ích cho development:
+
+| Task | Mục đích |
+| --- | --- |
+| `build_shared` | Build và install module `shared`. |
+| `start_infra` | Chạy Docker Compose cho hạ tầng local. |
+| `stop_infra` | Dừng và xóa container hạ tầng local. |
+| `restart_infra` | Restart hạ tầng local. |
+| `run_user` | Build `shared`, sau đó chạy `user-service`. |
+| `format` | Kiểm tra format. |
+| `format_fix` | Tự sửa format. |
+
+### `README.md`
+
+README tổng của dự án, gồm mô tả ngắn, công nghệ sử dụng và hướng dẫn chạy nhanh.
+
+## `deployment/`
+
+Thư mục chứa cấu hình triển khai/hạ tầng.
+
+```text
+deployment/
+└── docker-compose/
+    └── infra.yml
+```
+
+`infra.yml` hiện bật PostgreSQL local:
+
+| Thuộc tính | Giá trị |
+| --- | --- |
+| Service | `user-db` |
+| Image | `postgres:18-alpine` |
+| Database | `user-db` |
+| Username | `admin` |
+| Password | `admin@123` |
+| Port mapping | `15432:5432` |
+
+Trong file này cũng có block Kafka và Kafka UI, nhưng đang được comment nên chưa chạy mặc định.
+
+## `document/`
+
+Thư mục chứa tài liệu dự án.
+
+```text
+document/
+├── structure.md
+├── high-level-design.md
+└── backend-design.docx
+```
+
+Vai trò:
+
+- `structure.md`: tài liệu cấu trúc dự án hiện tại.
+- `high-level-design.md`: tài liệu thiết kế mức cao.
+- `backend-design.docx`: tài liệu backend design dạng Word.
+
+## `shared/`
+
+`shared` là module dùng chung cho các service.
+
+```text
+shared/
+├── pom.xml
+└── src/main/java/sharing/
+    ├── base/
+    ├── configs/
+    ├── constants/
+    ├── dtos/
+    ├── enums/
+    ├── exceptions/
+    ├── utils/
+    └── TestRun.java
+```
+
+### `sharing.base`
+
+Chứa các abstraction dùng chung:
+
+| Package | Vai trò |
+| --- | --- |
+| `base.controller` | `BaseController`, cung cấp endpoint CRUD/search mặc định. |
+| `base.entity` | `BaseEntity`, chứa `id`, `code`, audit fields và `deletedAt`. |
+| `base.repository` | `BaseRepository`, kế thừa `JpaRepository` và `JpaSpecificationExecutor`. |
+| `base.service` | `BaseService`, contract CRUD/search. |
+| `base.service.impl` | `BaseServiceImpl`, implementation CRUD/search và soft delete. |
+| `base.mapper` | `BaseMapper`, contract mapping giữa request/entity/response. |
+| `base.exception` | Exception cơ sở như `ResourceNotFoundException`. |
+
+### `sharing.configs`
+
+Chứa cấu hình dùng chung:
+
+- `JpaAuditingConfig`: bật JPA auditing, auditor mặc định là `system`.
+- `GlobalMapperConfig`: cấu hình MapStruct, bỏ qua field null khi update entity.
+
+### `sharing.constants`
+
+Chứa constant:
+
+- `DateConstant`: format datetime.
+- `UserSerivceConstant`: base API path và tên bảng user profile.
+
+Lưu ý: tên hiện tại trong code là `UserSerivceConstant`, đang sai chính tả so với `UserServiceConstant`.
+
+### `sharing.dtos`
+
+Chứa DTO dùng chung:
+
+- `PagedRequest`
+- `PagedResponse`
+- `ErrorCode`
+- `user_service/UserProfileRequest`
+- `user_service/UserProfileResponse`
+
+### `sharing.exceptions`
+
+Chứa xử lý lỗi chung:
+
+- `AppException`
+- `GlobalExceptionHandler`
+
+Error response dùng Spring `ProblemDetail`.
+
+### `sharing.utils`
+
+Chứa UUIDv7 support:
+
+- `UUIDv7`
+- `UUIDv7Generator`
+
+## `user-service/`
+
+`user-service` là service quản lý hồ sơ người dùng.
+
+```text
+user-service/
+├── pom.xml
+└── src/
+    ├── main/
+    │   ├── java/com/motel/user_service/
+    │   │   ├── controller/
+    │   │   ├── entity/
+    │   │   ├── mapper/
+    │   │   ├── repository/
+    │   │   ├── service/
+    │   │   └── UserServiceApplication.java
+    │   └── resources/
+    │       ├── application.yaml
+    │       └── db/migration/
+    └── test/java/com/motel/user_service/
+```
+
+### Application
+
+`UserServiceApplication` là entrypoint của service.
+
+Service scan hai package:
+
+```java
+@SpringBootApplication(scanBasePackages = {"com.motel.user_service", "sharing"})
+```
+
+Cần scan `sharing` để nhận config, exception handler và các bean từ module `shared`.
+
+### Controller
+
+`UserProfileController`:
+
+- Route base: `/api/v1/user-profiles`
+- Kế thừa `BaseController`
+- Có sẵn các endpoint create, get by id, get all, search, update và delete.
+
+### Service
+
+`UserProfileService` kế thừa `BaseService`.
+
+`UserProfileServiceImpl` kế thừa `BaseServiceImpl`, dùng logic CRUD/search mặc định.
+
+### Repository
+
+`UserProfileRepository` kế thừa `BaseRepository<UserProfile, UUID>`.
+
+Method riêng hiện có:
+
+- `findByKeycloakId`
+- `findByEmailAndDeletedAt`
+
+### Mapper
+
+`UserProfileMapper` dùng MapStruct và kế thừa `BaseMapper`.
+
+### Entity
+
+`UserProfile` map tới bảng `user_profiles`.
+
+Field chính:
+
+- `keycloakId`
+- `landlordId`
+- `role`
+- `fullName`
+- `email`
+- `phone`
+- `avatarUrl`
+- `zaloUid`
+- `sensitivityClearance`
+- `isActive`
+- `lastLoginAt`
+
+Entity kế thừa `BaseEntity`, nên có thêm:
+
+- `id`
+- `code`
+- `createdBy`
+- `createdAt`
+- `updatedBy`
+- `updatedAt`
+- `deletedAt`
+
+### Resources
+
+`application.yaml` cấu hình:
+
+- App name: `user-service`
+- Port: `8091`
+- Datasource: `jdbc:postgresql://localhost:15432/user-db`
+- Hibernate `ddl-auto: none`
+
+`db/migration/V1__init_user_profile.sql` tạo bảng `user_profiles`.
+
+## Luồng phụ thuộc
+
+```mermaid
+flowchart LR
+    Root["Root pom.xml"] --> Shared["shared"]
+    Root --> UserService["user-service"]
+    UserService --> Shared
+    UserService --> Postgres["PostgreSQL user-db"]
+```
+
+`user-service` phụ thuộc vào `shared`, nên khi chạy service riêng cần build/install `shared` trước.
+
+## Ghi chú quan trọng
+
+- API success hiện trả trực tiếp DTO hoặc `PagedResponse`, chưa dùng wrapper `ApiResponse`.
+- Delete mặc định là soft delete bằng field `deletedAt`.
+- Search mặc định hỗ trợ phân trang, sort, keyword trên `code`, khoảng thời gian theo `createdAt` và dynamic filter theo query param.
+- Migration hiện chưa có cột `created_by` và `updated_by`, trong khi `BaseEntity` có field `createdBy` và `updatedBy`. Nếu runtime báo thiếu cột, cần thêm migration mới để đồng bộ schema.

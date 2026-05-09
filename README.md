@@ -1,75 +1,121 @@
 # Motel Management System Backend
 
-Hệ thống quản lý bất động sản cho thuê thông minh (Smart Real Estate Management System). Backend được xây dựng theo kiến trúc Microservices, sử dụng Java 25 và Spring Boot 4.
+Backend cho hệ thống quản lý bất động sản/phòng trọ cho thuê. Dự án đang được tổ chức theo hướng Maven multi-module để có thể mở rộng dần thành nhiều service độc lập.
 
-### Chi tiết cấu trúc các thành phần:
+## Thành phần chính
 
-- 📦 **[shared/](./shared)**: Module nền tảng của toàn bộ hệ thống.
-  - Chứa các lớp **Base** (Controller, Service, Entity), **Config**, **DTOs** và **Exception handling**.
-  - **Lưu ý**: Đây là module dùng chung, mọi service khác đều phụ thuộc vào nó. Bạn **phải build module này đầu tiên** để các service khác có thể hoạt động. Xem chi tiết tại [Shared README](./shared/README.md).
+| Thành phần | Vai trò |
+| --- | --- |
+| `shared/` | Module dùng chung, chứa base controller/service/repository/entity, mapper, DTO phân trang, exception handling, JPA auditing và UUIDv7 generator. |
+| `user-service/` | Service quản lý hồ sơ người dùng, expose API tại `/api/v1/user-profiles`. |
+| `deployment/` | Cấu hình hạ tầng local bằng Docker Compose. Hiện đang chạy PostgreSQL cho `user-service`. |
+| `document/` | Tài liệu dự án. Xem chi tiết cấu trúc tại [`document/structure.md`](./document/structure.md). |
 
-- 👤 **[user-service/](./user-service)**: Microservice quản lý người dùng.
-  - Phụ trách lưu trữ thông tin cá nhân, hồ sơ và phân quyền.
-  - Sử dụng module `shared` để chuẩn hóa các phản hồi API. Xem chi tiết tại [User Service README](./user-service/README.md).
+## Công nghệ sử dụng
 
-- 🐳 **[deployment/](./deployment)**: Quản lý môi trường triển khai.
-  - Chứa các kịch bản **Docker Compose** để khởi tạo cơ sở dữ liệu (PostgreSQL) và các thành phần hạ tầng khác như Kafka.
+- Java 25
+- Spring Boot 4.0.6
+- Spring WebMVC
+- Spring Data JPA
+- PostgreSQL
+- Flyway
+- Maven multi-module
+- MapStruct
+- Lombok
+- Spotless + Palantir Java Format
+- Docker Compose
+- Taskfile
 
-- 📄 **[document/](./document)**: Hệ thống tài liệu dự án.
-  - [Cấu trúc chi tiết (Structure)](./document/structure.md): Mô tả đầy đủ từng file và thư mục.
-  - [Thiết kế mức cao (High-level Design)](./document/high-level-design.md): Tài liệu phân tích nghiệp vụ.
+## Yêu cầu môi trường
 
----
+Cần cài sẵn:
 
-## 🚀 Development Workflow (Running with Task)
+- JDK 25
+- Docker và Docker Compose
+- Task
 
-Dự án sử dụng `Taskfile` để tự động hóa quy trình. Hãy thực hiện theo đúng thứ tự sau:
+Repo có Maven Wrapper nên không bắt buộc cài Maven global.
 
-### 1. Build Shared Module (QUAN TRỌNG)
+## Hướng dẫn chạy nhanh
 
-Vì mọi service đều phụ thuộc vào `shared`, bạn phải cài đặt nó vào local Maven repository trước:
+### 1. Build module dùng chung
+
+`user-service` phụ thuộc vào `shared`, nên cần build `shared` trước:
 
 ```bash
 task build_shared
 ```
 
-_(Tương đương: `mvnw -pl shared clean install`)_
+Lệnh tương đương:
 
-### 2. Khởi chạy hạ tầng (Infrastructure)
+```bash
+./mvnw -pl shared -am clean install -DskipTests
+```
 
-Chạy PostgreSQL và Kafka bằng Docker:
+Trên Windows PowerShell:
+
+```powershell
+.\mvnw.cmd -pl shared -am clean install -DskipTests
+```
+
+### 2. Chạy database local
 
 ```bash
 task start_infra
 ```
 
-_(Tương đương: `docker compose -f deployment/docker-compose/infra.yml up -d`)_
+Docker Compose sẽ chạy PostgreSQL:
 
-### 3. Chạy các Service
+| Thuộc tính | Giá trị |
+| --- | --- |
+| Container | `user-db` |
+| Database | `user-db` |
+| Username | `admin` |
+| Password | `admin@123` |
+| Port | `localhost:15432` |
 
-Sau khi build shared và chạy infra, bạn có thể khởi động các service:
+### 3. Chạy `user-service`
 
 ```bash
-# Chạy User Service
 task run_user
 ```
 
-_(Tương đương: `cd user-service && mvnw spring-boot:run`)_
+Service chạy tại:
 
-### 4. Các lệnh hữu ích khác
+```text
+http://localhost:8091
+```
 
-- **Format code**: `task format` (Sử dụng Spotless)
-- **Dừng hạ tầng**: `task stop_infra`
-- **Build Docker image**: `task build`
+Base API:
 
----
+```text
+http://localhost:8091/api/v1/user-profiles
+```
 
-## 🛠️ Core Stack
+## Lệnh hữu ích
 
-- **Languages**: Java 25, SQL.
-- **Frameworks**: Spring Boot 4.0.6, Spring Data JPA, Spring Kafka.
-- **Tools**: Maven, Docker, Task, MapStruct, Lombok.
+| Lệnh | Mục đích |
+| --- | --- |
+| `task build_shared` | Build và install module `shared`. |
+| `task start_infra` | Chạy hạ tầng local bằng Docker Compose. |
+| `task stop_infra` | Dừng và xóa container hạ tầng local. |
+| `task restart_infra` | Restart hạ tầng local. |
+| `task run_user` | Build `shared`, sau đó chạy `user-service`. |
+| `task format` | Kiểm tra format bằng Spotless. |
+| `task format_fix` | Tự sửa format bằng Spotless. |
 
----
+## Ghi chú phát triển
+
+- `user-service` scan cả package `com.motel.user_service` và `sharing`, vì service cần dùng bean/config từ module `shared`.
+- Schema database được quản lý bằng Flyway trong `user-service/src/main/resources/db/migration`.
+- Hibernate đang cấu hình `ddl-auto: none`, nên thay đổi entity cần đi kèm migration.
+- Delete mặc định trong base service là soft delete qua field `deletedAt`.
+- Kafka đã có block mẫu trong Docker Compose nhưng đang được comment, nên chưa phải dependency bắt buộc khi chạy local.
+
+## Tài liệu
+
+- [`document/structure.md`](./document/structure.md): mô tả cấu trúc thư mục, module và các file quan trọng.
+- [`document/high-level-design.md`](./document/high-level-design.md): tài liệu thiết kế mức cao.
+- `document/backend-design.docx`: tài liệu backend design dạng Word.
 
 © 2026 Motel Management System.
