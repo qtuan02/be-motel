@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sharing.base.entity.BaseEntity;
 import sharing.base.service.BaseService;
-import sharing.dto.PagedRequest;
-import sharing.dto.PagedResponse;
+import sharing.dtos.PagedRequest;
+import sharing.dtos.PagedResponse;
 
 public abstract class BaseController<T extends BaseEntity, ID, REQ, RES, S extends BaseService<T, ID, REQ, RES>> {
 

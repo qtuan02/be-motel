@@ -1,4 +1,4 @@
-package sharing.constant;
+package sharing.constants;
 
 public interface UserSerivceConstant {
     String BASE_API = "/api/v1";

@@ -1,11 +1,11 @@
-package sharing.dto;
+package sharing.dtos;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
-import sharing.constant.DateConstant;
+import sharing.constants.DateConstant;
 
 @Data
 public class PagedRequest {

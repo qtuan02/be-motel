@@ -6,23 +6,13 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import sharing.base.entity.BaseEntity;
-import sharing.constant.UserSerivceConstant;
+import sharing.constants.UserSerivceConstant;
 
 @Getter
 @Setter
 @Entity
-@Table(
-        name = UserSerivceConstant.USER_PROFILES_TABLE,
-        uniqueConstraints = {
-            @UniqueConstraint(
-                    name = "ux_user_profiles_keycloak_id",
-                    columnNames = {"keycloak_id"}),
-            @UniqueConstraint(
-                    name = "ux_user_profiles_email_deleted_at",
-                    columnNames = {"email", "deleted_at"})
-        })
+@Table(name = UserSerivceConstant.USER_PROFILES_TABLE)
 public class UserProfile extends BaseEntity {
-
     @Column(name = "keycloak_id", nullable = false)
     private String keycloakId;
 

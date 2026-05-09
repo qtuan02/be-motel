@@ -1,4 +1,4 @@
-package sharing.dto.user_service;
+package sharing.dtos.user_service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package sharing.config;
+package sharing.configs;
 
 import org.mapstruct.Builder;
 import org.mapstruct.MapperConfig;

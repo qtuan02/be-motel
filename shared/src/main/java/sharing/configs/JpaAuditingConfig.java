@@ -1,4 +1,4 @@
-package sharing.config;
+package sharing.configs;
 
 import java.util.Optional;
 import org.springframework.context.annotation.Bean;
