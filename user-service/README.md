@@ -1,41 +1,34 @@
-# User Service
+﻿# User Service
 
-Service quản lý thông tin người dùng và hồ sơ cá nhân (User Profile) trong hệ thống.
+`user-service` manages user profile metadata, staff permissions, ABAC policies, FCM token metadata, and internal claim projection for SRMS.
 
-## 🚀 Tính năng chính
+## Key Rules Applied
 
-- Quản lý hồ sơ người dùng (`UserProfile`).
-- Hỗ trợ tìm kiếm và lọc dữ liệu động.
-- Tích hợp với `shared` module để chuẩn hóa dữ liệu đầu ra.
+- Public API contracts (DTOs), enums, constants, and domain error codes are centralized in `shared`.
+- `user-service` keeps only service-owned domain code: entity, repository, mapper, service workflow, controller, auth adapter.
+- APIs remain under `/api/v1/...`.
 
-## 🛠️ API Endpoints
+## Main Endpoints
 
-Service sử dụng base path được định nghĩa trong `UserSerivceConstant.USER_PROFILES_API` (thường là `/api/v1/user-profiles`).
+- `POST /api/v1/auth/register`
+- `GET /api/v1/users/me`
+- `PUT /api/v1/users/me`
+- `POST /api/v1/users/me/fcm-token`
+- `DELETE /api/v1/users/me/fcm-token/{id}`
+- `PUT /api/v1/users/me/zalo-uid`
+- `GET /api/v1/landlords/{landlordId}/staff`
+- `POST /api/v1/landlords/{landlordId}/staff`
+- `PUT /api/v1/landlords/{landlordId}/staff/{staffId}/permissions`
+- `DELETE /api/v1/landlords/{landlordId}/staff/{staffId}`
+- `GET /api/v1/abac/policies`
+- `POST /api/v1/abac/policies`
+- `DELETE /api/v1/abac/policies/{id}`
+- `GET /api/v1/internal/users/{keycloakId}/claims`
 
-Các endpoints mặc định:
+## Flyway Migrations
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/` | Tạo mới hồ sơ người dùng. |
-| `GET` | `/{id}` | Lấy thông tin hồ sơ theo ID. |
-| `GET` | `/search` | Tìm kiếm hồ sơ (Hỗ trợ phân trang và filter động). |
-| `GET` | `/` | Lấy danh sách tất cả hồ sơ. |
-| `PUT` | `/{id}` | Cập nhật hồ sơ. |
-| `DELETE` | `/{id}` | Xóa hồ sơ. |
-
-## 🏗️ Kiến trúc Layer
-
-1. **Controller**: `UserProfileController` - Kế thừa từ `BaseController`.
-2. **Service**: `UserProfileService` & `UserProfileServiceImpl`.
-3. **Repository**: `UserProfileRepository`.
-4. **Entity**: `UserProfile`.
-5. **Mapper**: `UserProfileMapper` (Sử dụng MapStruct).
-6. **DTO**: `UserProfileRequest` & `UserProfileResponse`.
-
-## ⚙️ Cấu hình Database
-
-- **PostgreSQL**: Kết nối tới database `user-db`.
-- **Flyway/Liquibase**: (Nếu có) Quản lý migration schema.
-
----
-[Quay lại README tổng](../README.md)
+- `V1__init_user_profile.sql`
+- `V2__create_user_building_permissions.sql`
+- `V3__create_abac_policies.sql`
+- `V4__create_fcm_tokens.sql`
+- `V5__create_auth_audit_logs.sql`

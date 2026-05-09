@@ -7,10 +7,19 @@ spring:
     password: admin@123
   jpa:
     show-sql: true
+    open-in-view: false
     hibernate:
       ddl-auto: none
   flyway:
     baseline-on-migrate: true
+
+app:
+  pii:
+    encryption-key-base64: ${APP_PII_ENCRYPTION_KEY_BASE64:}
+  internal-auth:
+    enabled: false
+    header-name: X-Internal-Token
+    token:
 
 server:
   port: 8091
