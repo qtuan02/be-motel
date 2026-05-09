@@ -7,8 +7,8 @@ import com.motel.user_service.service.UserProfileService;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import sharing.base.service.impl.BaseServiceImpl;
-import sharing.dto.user_service.UserProfileRequest;
-import sharing.dto.user_service.UserProfileResponse;
+import sharing.dtos.user_service.UserProfileRequest;
+import sharing.dtos.user_service.UserProfileResponse;
 
 @Service
 public class UserProfileServiceImpl

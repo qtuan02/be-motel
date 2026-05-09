@@ -1,4 +1,4 @@
-package sharing.dto;
+package sharing.dtos;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

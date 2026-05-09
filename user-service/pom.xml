@@ -24,14 +24,11 @@
 		<tag/>
 		<url/>
 	</scm>
-	<properties>
-		<spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
-		<mapstruct.version>1.6.3</mapstruct.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>shared</groupId>
 			<artifactId>shared</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -50,6 +47,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -69,15 +67,18 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+			<version>${flyway.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
+			<version>${flyway.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -112,15 +113,17 @@
 							<goal>compile</goal>
 						</goals>
 						<configuration>
+							<generatedSourcesDirectory>${project.build.directory}/mapstruct-generated-sources</generatedSourcesDirectory>
 							<annotationProcessorPaths>
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>
+									<version>${lombok.version}</version>
 								</path>
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok-mapstruct-binding</artifactId>
-									<version>0.2.0</version>
+									<version>${lombok-mapstruct-binding.version}</version>
 								</path>
 								<path>
 									<groupId>org.mapstruct</groupId>
@@ -141,11 +144,12 @@
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>
+									<version>${lombok.version}</version>
 								</path>
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok-mapstruct-binding</artifactId>
-									<version>0.2.0</version>
+									<version>${lombok-mapstruct-binding.version}</version>
 								</path>
 								<path>
 									<groupId>org.mapstruct</groupId>
@@ -153,6 +157,19 @@
 									<version>${mapstruct.version}</version>
 								</path>
 							</annotationProcessorPaths>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile-generated-sources</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<proc>none</proc>
+							<compileSourceRoots>
+								<compileSourceRoot>${project.build.directory}/mapstruct-generated-sources</compileSourceRoot>
+							</compileSourceRoots>
 						</configuration>
 					</execution>
 				</executions>
@@ -166,7 +183,7 @@
                         <importOrder />
                         <removeUnusedImports />
                         <palantirJavaFormat>
-                            <version>2.90.0</version>
+                            <version>${palantir-java-format.version}</version>
                         </palantirJavaFormat>
                         <formatAnnotations />
                     </java>

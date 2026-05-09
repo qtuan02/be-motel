@@ -1,4 +1,4 @@
-package sharing.exception;
+package sharing.exceptions;
 
 import java.net.URI;
 import java.time.Instant;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import sharing.dto.ErrorCode;
+import sharing.dtos.ErrorCode;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {

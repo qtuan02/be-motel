@@ -1,4 +1,4 @@
-package sharing.dto.user_service;
+package sharing.dtos.user_service;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

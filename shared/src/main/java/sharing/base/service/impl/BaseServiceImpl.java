@@ -16,8 +16,8 @@ import sharing.base.exception.ResourceNotFoundException;
 import sharing.base.mapper.BaseMapper;
 import sharing.base.repository.BaseRepository;
 import sharing.base.service.BaseService;
-import sharing.dto.PagedRequest;
-import sharing.dto.PagedResponse;
+import sharing.dtos.PagedRequest;
+import sharing.dtos.PagedResponse;
 
 public abstract class BaseServiceImpl<T extends BaseEntity, ID, REQ, RES, R extends BaseRepository<T, ID>>
         implements BaseService<T, ID, REQ, RES> {

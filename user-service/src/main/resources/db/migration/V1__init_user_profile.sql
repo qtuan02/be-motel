@@ -16,7 +16,3 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     deleted_at BIGINT NOT NULL DEFAULT 0,
     code VARCHAR(50) NOT NULL
 );
-
-CREATE INDEX idx_users_keycloak ON user_profiles(keycloak_id);
-CREATE INDEX idx_users_landlord ON user_profiles(landlord_id) WHERE deleted_at = 0;
-CREATE INDEX idx_users_email ON user_profiles(email) WHERE deleted_at = 0;

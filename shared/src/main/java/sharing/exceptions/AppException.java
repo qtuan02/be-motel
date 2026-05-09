@@ -1,7 +1,7 @@
-package sharing.exception;
+package sharing.exceptions;
 
 import java.util.Map;
-import sharing.dto.ErrorCode;
+import sharing.dtos.ErrorCode;
 
 public class AppException extends RuntimeException {
     private final ErrorCode errorCode;

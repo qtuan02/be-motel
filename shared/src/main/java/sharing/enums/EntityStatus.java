@@ -1,4 +1,4 @@
-package sharing.dto;
+package sharing.enums;
 
 public enum EntityStatus {
     ACTIVE,
